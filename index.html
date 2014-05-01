@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Taking JavaScript Out Of Context</title>
+    <link rel="stylesheet" href="styles/styles.css"/>
+  </head>
+  <body>
+    <article>
+      <section data-bespoke-background="vertical-wipe-in vertical-wipe-out background-yellow" class="vertical-wipe-in vertical-wipe-out background-yellow"><img src="images/profile.jpg" class="avatar">
+      </section>
+      <section data-bespoke-background="vertical-wipe-in vertical-wipe-out background-yellow title" class="vertical-wipe-in vertical-wipe-out background-yellow title">
+        <h1><small class="taking">Taking </small>
+          <div class="javascript">JavaScript </div><small class="outof">Out Of </small>
+          <div class="content">Context</div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out" class="horizontal-wipe-in horizontal-wipe-out">
+        <h1><em>this</em></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black jquery-event-handler" class="horizontal-wipe-in horizontal-wipe-out background-black jquery-event-handler">
+        <pre class="bullet language-javascript"><code>$('.clickme').on('click', function() {
+&nbsp;&nbsp;this.innerHTML = 'Wait 1 sec...';
+</code></pre>
+        <pre class="bullet language-javascript"><code>&nbsp;&nbsp;setTimeout(function() {
+&nbsp;&nbsp;&nbsp;&nbsp;this.innerHTML = 'Done!';
+&nbsp;&nbsp;}, 1000);
+
+&nbsp;&nbsp;// But it doesn't work?
+
+});</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-mostinterestingman" class="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-mostinterestingman">
+        <h2>What?</h2>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="bullet language-javascript"><code>var sayHi = person.sayHi;</code></pre><br>
+        <pre class="bullet language-javascript"><code>sayHi();</code></pre><br>
+        <pre class="bullet language-javascript error"><code>'Hi, my name is undefined'</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-cleese" class="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-cleese">
+        <h2>...Really?</h2>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="bullet language-javascript"><code>el.addEventListener('click', person.sayHi);</code></pre><br>
+        <pre class="bullet language-javascript"><code>el.click();</code></pre><br>
+        <pre class="bullet language-javascript error"><code>'Hi, my name is undefined'</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-fawlty" class="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-fawlty">
+        <h2>F*CKING JAVASCRIPT</h2>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-red" class="horizontal-wipe-in vertical-wipe-out background-red">
+        <h1>Mental model</h1>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in horizontal-wipe-out background-yellow" class="vertical-wipe-in horizontal-wipe-out background-yellow">
+        <h1>Let's fix this</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1>The short version</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-red" class="horizontal-wipe-in horizontal-wipe-out background-red">
+        <h1>Every function shadows the value of <em>this</em></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1><small class="bullet">When the function is called,</small>
+          <div class="bullet">Look to the left of the dot.</div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="language-javascript"><code>person.sayHi();</code></pre><br>
+        <pre class="language-javascript"><code>// 'this' is person</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="language-javascript"><code>sayHi();</code></pre>
+        <pre class="language-javascript"><code>// no dot, so 'this' is window
+// (or undefined in strict mode)</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-black" class="horizontal-wipe-in vertical-wipe-out background-black">
+        <pre class="language-javascript"><code>new Person();</code></pre>
+        <pre class="language-javascript"><code>// 'this' is the new instance object</code></pre>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in horizontal-wipe-out background-yellow" class="vertical-wipe-in horizontal-wipe-out background-yellow">
+        <h1>What's really going on?</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-gif background-gif-catbox" class="horizontal-wipe-in vertical-wipe-out background-gif background-gif-catbox">
+        <h2>Hint:&nbsp;&nbsp;Schrödinger's cat</h2>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in horizontal-wipe-out background-yellow" class="vertical-wipe-in horizontal-wipe-out background-yellow">
+        <h1><small>Question:</small>
+          <div>How do we define <em>constructors</em>?</div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-green" class="horizontal-wipe-in horizontal-wipe-out background-green">
+        <h1><small class="bullet">Answer?</small><em class="bullet">With functions</em></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-black" class="horizontal-wipe-in vertical-wipe-out background-black">
+        <pre class="bullet language-javascript"><code>var Person = function(name) {
+  this.name = name;
+};</code></pre>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in horizontal-wipe-out background-yellow" class="vertical-wipe-in horizontal-wipe-out background-yellow">
+        <h1><small>Question:</small>
+          <div>How do we define <em>methods</em>?</div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-green" class="horizontal-wipe-in horizontal-wipe-out background-green">
+        <h1><small class="bullet">Once again...</small>
+          <div class="bullet"><em>With functions.</em></div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-black" class="horizontal-wipe-in vertical-wipe-out background-black">
+        <pre class="bullet language-javascript"><code>var person = {
+
+  name: 'Mark',
+  
+  sayHi: function() {
+    return "Hi, I'm " + this.name;
+  }
+  
+};</code></pre>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in vertical-wipe-out background-yellow" class="vertical-wipe-in vertical-wipe-out background-yellow">
+        <h1>If everything is a function...</h1>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in horizontal-wipe-out background-gif background-gif-grinch" class="vertical-wipe-in horizontal-wipe-out background-gif background-gif-grinch">
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="bullet language-javascript"><code>var sayHi = function(){
+  return "Hi, I'm " + this.name;
+};
+
+var person = {
+  sayHi: sayHi
+};</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="bullet language-javascript"><code>// function:
+sayHi();
+
+// constructor:
+new sayHi();
+
+// method:
+person.sayHi();
+</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1>
+          <div class="bullet">Same function</div><em>
+            <div class="bullet">called in three different ways</div></em>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <div class="bullet"><img src="images/rauschma.jpeg" class="avatar">
+          <blockquote>&ldquo;Current functions playing triple duty is difficult to understand.&rdquo;</blockquote>
+        </div>
+        <h3 class="bullet">
+          <cite>Dr. Axel Rauschmayer</cite>
+          <div><a href="http://www.2ality.com/2012/04/arrow-functions.html">ECMAScript.next: arrow functions and method definitions</a></div>
+        </h3>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-blue" class="horizontal-wipe-in horizontal-wipe-out background-blue">
+        <h1><span class="bullet">Constructor, </span><span class="bullet">method, </span><span class="bullet">or </span>
+          <div class="bullet"><em>plain old function?</em></div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1><em>The calling code decides</em></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-catbox2" class="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-catbox2">
+        <h1><em>Schrödinger's function</em></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-yellow" class="horizontal-wipe-in horizontal-wipe-out background-yellow">
+        <h1>Passing a callback to someone else?</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-gif background-gif-mindblown" class="horizontal-wipe-in vertical-wipe-out background-gif background-gif-mindblown">
+        <h1>You're not the <em>calling code</em></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-black" class="horizontal-wipe-in vertical-wipe-out background-black">
+        <pre class="bullet language-javascript"><code>var runAsCallback = function(fn) {
+  fn();
+  // No dot,
+  // so 'this' is window
+};</code></pre><br>
+        <pre class="bullet language-javascript"><code>// Even if you pass it a method
+runAsCallback(person.sayHi);
+</code></pre>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in horizontal-wipe-out background-yellow" class="vertical-wipe-in horizontal-wipe-out background-yellow">
+        <h1>Can we explicitly set <em>this?</em></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="language-javascript"><code>// When calling a function</code></pre><br>
+        <pre class="language-javascript"><code>sayHi.call(person, arg1, arg2);</code></pre>
+        <pre class="language-javascript"><code>// or...</code></pre>
+        <pre class="language-javascript"><code>sayHi.apply(person, [arg1, arg2]);</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="language-javascript"><code>// When passing a method as a callback</code></pre><br>
+        <pre class="language-javascript"><code>runAsCallback(
+  person.sayHi.bind(person)
+);</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in vertical-wipe-out background-black" class="horizontal-wipe-in vertical-wipe-out background-black">
+        <pre class="language-javascript"><code>// When trying to maintain the context</code></pre><br>
+        <pre class="language-javascript"><code>setTimeout(function() {
+
+  // etc...
+  
+}.bind(this), 1000);</code></pre>
+      </section>
+      <section data-bespoke-background="vertical-wipe-in horizontal-wipe-out background-red" class="vertical-wipe-in horizontal-wipe-out background-red">
+        <h1>Is <em>this</em> worth it?</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-daffy" class="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-daffy">
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-green" class="horizontal-wipe-in horizontal-wipe-out background-green">
+        <h1><small class="bullet">Another option...</small>
+          <div class="bullet">Only use functions, </div><em class="bullet">as functions</em>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="language-javascript"><code>function makePerson(name) {
+  var sayHi = function() {
+    return "Hi, I'm " + name;
+  };
+  
+  return {
+    sayHi: sayHi
+  };
+};
+</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1><small>For example,</small>
+          <div>Bespoke.js</div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="bullet fixed-width language-javascript"><code>bespoke.from = function(el, plugins) {
+  var listeners = [],
+      on = function(e, fn) { },
+      next = function() { },
+      prev = function() { }, // etc...
+      </code></pre>
+        <pre class="bullet fixed-width language-javascript"><code>&nbsp;&nbsp;return {
+&nbsp;&nbsp;&nbsp;&nbsp;on: on,
+&nbsp;&nbsp;&nbsp;&nbsp;next: next,
+&nbsp;&nbsp;&nbsp;&nbsp;prev: prev, // etc...
+&nbsp;&nbsp;};
+};</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1><small><span class="bullet">Need private state? </span><span class="bullet">Simple.</span></small>
+          <div class="bullet">Don't expose it.</div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-green" class="horizontal-wipe-in horizontal-wipe-out background-green">
+        <h1>No methods or constructors</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-green" class="horizontal-wipe-in horizontal-wipe-out background-green">
+        <h1>
+          <div class="bullet">Functions return objects,</div>
+          <div class="bullet"><em>powered by closures</em></div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <div class="bullet"><img src="images/douglascrockford.jpeg" class="avatar">
+          <blockquote>&ldquo;This is everything you need to make objects, and it all works because of <em>functions</em>&rdquo;</blockquote>
+        </div>
+        <h3 class="bullet">
+          <cite>Douglas Crockford</cite>
+          <div><a href="http://yow.eventer.com/yow-2013-1080/the-world-s-most-misunderstood-programming-language-by-douglas-crockford-1377">The World's Most Misunderstood Programming Language</a></div>
+        </h3>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-horse" class="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-horse">
+        <h1><small>Functions:</small>
+          <div>The Good Parts</div>
+        </h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1>ES6 makes this pattern easy</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-yellow" class="horizontal-wipe-in horizontal-wipe-out background-yellow">
+        <h1>Arrow<br />functions</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="language-javascript"><code>let makePerson = (name) => {
+
+  let sayHi = () => `Hi, I'm ${ name }`;
+  
+  return { sayHi };
+  
+};</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-black" class="horizontal-wipe-in horizontal-wipe-out background-black">
+        <pre class="language-javascript"><code>$('.clickme').on('click', function() {
+  this.innerHTML = 'Wait 1 sec...';
+  
+  setTimeout(() => {
+    this.innerHTML = 'Done!';
+  }, 1000);
+  
+});
+</code></pre>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-green" class="horizontal-wipe-in horizontal-wipe-out background-green">
+        <h1><span class="bullet">You don't need <em>this</em>, </span><span class="bullet">but you need to <em>understand it</em></span></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-white" class="horizontal-wipe-in horizontal-wipe-out background-white">
+        <h1><small>And if you only remember one thing...</small></h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-catbox2" class="horizontal-wipe-in horizontal-wipe-out background-gif background-gif-catbox2">
+        <h1>Look to the left of the dot.</h1>
+      </section>
+      <section data-bespoke-background="horizontal-wipe-in horizontal-wipe-out background-yellow" class="horizontal-wipe-in horizontal-wipe-out background-yellow">
+        <h1>Thank you!</h1>
+        <h2><a href="http://bit.ly/gettingcontext">bit.ly/gettingcontext</a></h2><img src="images/profile.jpg" class="avatar">
+        <h2>@markdalgleish</h2>
+      </section>
+    </article>
+    <script src="scripts/scripts.js"></script>
+  </body>
+</html>
