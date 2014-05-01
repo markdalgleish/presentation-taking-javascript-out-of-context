@@ -1,0 +1,417 @@
+mixin slide(classNames)
+  section(class=classNames, data-bespoke-background=classNames)
+    block
+
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    title Taking JavaScript Out Of Context
+
+    // build:css styles/styles.css
+    link(rel='stylesheet', type='text/css', href='bower_components/prism/themes/prism-tomorrow.css')
+    link(rel='stylesheet', type='text/css', href='styles/main.css')
+    // endbuild
+
+  body
+
+    article
+
+      +slide('vertical-wipe-in vertical-wipe-out background-yellow')
+        img.avatar(src='images/profile.jpg')
+
+      +slide('vertical-wipe-in vertical-wipe-out background-yellow title')
+        h1
+          small.taking Taking 
+          .javascript JavaScript 
+          small.outof Out Of 
+          .content Context
+
+      +slide('horizontal-wipe-in horizontal-wipe-out')
+        h1
+          em this
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black jquery-event-handler')
+        pre.bullet.language-javascript
+          code.
+            $('.clickme').on('click', function() {
+            &nbsp;&nbsp;this.innerHTML = 'Wait 1 sec...';
+
+        pre.bullet.language-javascript
+          code.
+            &nbsp;&nbsp;setTimeout(function() {
+            &nbsp;&nbsp;&nbsp;&nbsp;this.innerHTML = 'Done!';
+            &nbsp;&nbsp;}, 1000);
+
+            &nbsp;&nbsp;// But it doesn't work?
+
+            });
+      +slide('horizontal-wipe-in horizontal-wipe-out background-gif background-gif-mostinterestingman')
+        h2 What?
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.bullet.language-javascript
+          code.
+            var sayHi = person.sayHi;
+        br
+        pre.bullet.language-javascript
+          code.
+            sayHi();
+        br
+        pre.bullet.language-javascript.error
+          code.
+            'Hi, my name is undefined'
+      +slide('horizontal-wipe-in horizontal-wipe-out background-gif background-gif-cleese')
+        h2 ...Really?
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.bullet.language-javascript
+          code.
+            el.addEventListener('click', person.sayHi);
+        br
+        pre.bullet.language-javascript
+          code.
+            el.click();
+        br
+        pre.bullet.language-javascript.error
+          code.
+            'Hi, my name is undefined'
+      +slide('horizontal-wipe-in horizontal-wipe-out background-gif background-gif-fawlty')
+        h2 F*CKING JAVASCRIPT
+
+      +slide('horizontal-wipe-in vertical-wipe-out background-red')
+        h1 Mental model
+
+      +slide('vertical-wipe-in horizontal-wipe-out background-yellow')
+        h1 Let's fix this
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1 The short version
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-red')
+        h1 Every function shadows the value of <em>this</em>
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1
+          small.bullet When the function is called,
+          .bullet Look to the left of the dot.
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.language-javascript
+          code.
+            person.sayHi();
+        br
+        pre.language-javascript
+          code.
+            // 'this' is person
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.language-javascript
+          code.
+            sayHi();
+        pre.language-javascript
+          code.
+            // no dot, so 'this' is window
+            // (or undefined in strict mode)
+      +slide('horizontal-wipe-in vertical-wipe-out background-black')
+        pre.language-javascript
+          code.
+            new Person();
+        pre.language-javascript
+          code.
+            // 'this' is the new instance object
+      +slide('vertical-wipe-in horizontal-wipe-out background-yellow')
+        h1 What's really going on?
+
+      +slide('horizontal-wipe-in vertical-wipe-out background-gif background-gif-catbox')
+        h2 Hint:&nbsp;&nbsp;Schrödinger's cat
+
+      +slide('vertical-wipe-in horizontal-wipe-out background-yellow')
+        h1
+          small Question:
+          div How do we define <em>constructors</em>?
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-green')
+        h1
+          small.bullet Answer?
+          em.bullet With functions
+
+      +slide('horizontal-wipe-in vertical-wipe-out background-black')
+        pre.bullet.language-javascript
+          code.
+            var Person = function(name) {
+              this.name = name;
+            };
+      +slide('vertical-wipe-in horizontal-wipe-out background-yellow')
+        h1
+          small Question:
+          div How do we define <em>methods</em>?
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-green')
+        h1
+          small.bullet Once again...
+          .bullet
+            em With functions.
+      +slide('horizontal-wipe-in vertical-wipe-out background-black')
+        pre.bullet.language-javascript
+          code.
+            var person = {
+
+              name: 'Mark',
+
+              sayHi: function() {
+                return "Hi, I'm " + this.name;
+              }
+
+            };
+      +slide('vertical-wipe-in vertical-wipe-out background-yellow')
+        h1 If everything is a function...
+
+      +slide('vertical-wipe-in horizontal-wipe-out background-gif background-gif-grinch')
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.bullet.language-javascript
+          code.
+            var sayHi = function(){
+              return "Hi, I'm " + this.name;
+            };
+
+            var person = {
+              sayHi: sayHi
+            };
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.bullet.language-javascript
+          code.
+            // function:
+            sayHi();
+
+            // constructor:
+            new sayHi();
+
+            // method:
+            person.sayHi();
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1
+          .bullet Same function
+          em:.bullet called in three different ways
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        .bullet
+          img.avatar(src='images/rauschma.jpeg')
+          blockquote &ldquo;Current functions playing triple duty is difficult to understand.&rdquo;
+        h3.bullet
+          cite Dr. Axel Rauschmayer
+          div
+            a(href='http://www.2ality.com/2012/04/arrow-functions.html') ECMAScript.next: arrow functions and method definitions
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-blue')
+        h1
+          span.bullet Constructor, 
+          span.bullet method, 
+          span.bullet or 
+          .bullet
+            em plain old function?
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1
+          em The calling code decides
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-gif background-gif-catbox2')
+        h1
+          em Schrödinger's function
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-yellow')
+        h1 Passing a callback to someone else?
+
+      +slide('horizontal-wipe-in vertical-wipe-out background-gif background-gif-mindblown')
+        h1 You're not the <em>calling code</em>
+
+      +slide('horizontal-wipe-in vertical-wipe-out background-black')
+        pre.bullet.language-javascript
+          code.
+            var runAsCallback = function(fn) {
+              fn();
+              // No dot,
+              // so 'this' is window
+            };
+        br
+        pre.bullet.language-javascript
+          code.
+            // Even if you pass it a method
+            runAsCallback(person.sayHi);
+
+      +slide('vertical-wipe-in horizontal-wipe-out background-yellow')
+        h1 Can we explicitly set <em>this?</em>
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.language-javascript
+          code.
+            // When calling a function
+        br
+        pre.language-javascript
+          code.
+            sayHi.call(person, arg1, arg2);
+        pre.language-javascript
+          code.
+            // or...
+        pre.language-javascript
+          code.
+            sayHi.apply(person, [arg1, arg2]);
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.language-javascript
+          code.
+            // When passing a method as a callback
+        br
+        pre.language-javascript
+          code.
+            runAsCallback(
+              person.sayHi.bind(person)
+            );
+      +slide('horizontal-wipe-in vertical-wipe-out background-black')
+        pre.language-javascript
+          code.
+            // When trying to maintain the context
+        br
+        pre.language-javascript
+          code.
+            setTimeout(function() {
+
+              // etc...
+
+            }.bind(this), 1000);
+      +slide('vertical-wipe-in horizontal-wipe-out background-red')
+        h1 Is <em>this</em> worth it?
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-gif background-gif-daffy')
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-green')
+        h1
+          small.bullet Another option...
+          .bullet Only use functions, 
+          em.bullet as functions
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.language-javascript
+          code.
+            function makePerson(name) {
+              var sayHi = function() {
+                return "Hi, I'm " + name;
+              };
+
+              return {
+                sayHi: sayHi
+              };
+            };
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1
+          small For example,
+          div Bespoke.js
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.bullet.fixed-width.language-javascript
+          code.
+            bespoke.from = function(el, plugins) {
+              var listeners = [],
+                  on = function(e, fn) { },
+                  next = function() { },
+                  prev = function() { }, // etc...
+
+        pre.bullet.fixed-width.language-javascript
+          code.
+            &nbsp;&nbsp;return {
+            &nbsp;&nbsp;&nbsp;&nbsp;on: on,
+            &nbsp;&nbsp;&nbsp;&nbsp;next: next,
+            &nbsp;&nbsp;&nbsp;&nbsp;prev: prev, // etc...
+            &nbsp;&nbsp;};
+            };
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1
+          small
+            span.bullet Need private state? 
+            span.bullet Simple.
+          .bullet Don't expose it.
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-green')
+        h1 No methods or constructors
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-green')
+        h1
+          .bullet Functions return objects,
+          .bullet
+            em powered by closures
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        .bullet
+          img.avatar(src='images/douglascrockford.jpeg')
+          blockquote &ldquo;This is everything you need to make objects, and it all works because of <em>functions</em>&rdquo;
+        h3.bullet
+          cite Douglas Crockford
+          div
+            a(href='http://yow.eventer.com/yow-2013-1080/the-world-s-most-misunderstood-programming-language-by-douglas-crockford-1377') The World's Most Misunderstood Programming Language
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-gif background-gif-horse')
+        h1
+          small Functions:
+          div The Good Parts
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1 ES6 makes this pattern easy
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-yellow')
+        h1 Arrow<br />functions
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.language-javascript
+          code.
+            let makePerson = (name) => {
+
+              let sayHi = () => `Hi, I'm ${ name }`;
+
+              return { sayHi };
+
+            };
+      +slide('horizontal-wipe-in horizontal-wipe-out background-black')
+        pre.language-javascript
+          code.
+            $('.clickme').on('click', function() {
+              this.innerHTML = 'Wait 1 sec...';
+
+              setTimeout(() => {
+                this.innerHTML = 'Done!';
+              }, 1000);
+
+            });
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-green')
+        h1
+          span.bullet You don't need <em>this</em>, 
+          span.bullet but you need to <em>understand it</em>
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-white')
+        h1
+          small And if you only remember one thing...
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-gif background-gif-catbox2')
+        h1 Look to the left of the dot.
+
+      +slide('horizontal-wipe-in horizontal-wipe-out background-yellow')
+        h1 Thank you!
+        h2
+          a(href='http://bit.ly/gettingcontext') bit.ly/gettingcontext
+        img.avatar(src='images/profile.jpg')
+        h2 @markdalgleish
+
+    // build:js scripts/scripts.js
+    script(src='bower_components/bespoke.js/dist/bespoke.js')
+    script(src='bower_components/bespoke-keys/dist/bespoke-keys.js')
+    script(src='bower_components/bespoke-touch/dist/bespoke-touch.js')
+    script(src='bower_components/bespoke-bullets/dist/bespoke-bullets.js')
+    script(src='bower_components/bespoke-scale/dist/bespoke-scale.js')
+    script(src='bower_components/bespoke-hash/dist/bespoke-hash.js')
+    script(src='bower_components/bespoke-progress/dist/bespoke-progress.js')
+    script(src='bower_components/bespoke-dir/dist/bespoke-dir.js')
+    script(src='bower_components/prism/prism.js')
+    script(src='scripts/main.js')
+    // endbuild
