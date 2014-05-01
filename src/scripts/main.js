@@ -7,6 +7,7 @@ var deck = bespoke.from('article', {
   dir: true
 });
 
+
 (function bespokeBackgrounds(deck) {
   var backgrounds = [];
 
@@ -46,3 +47,25 @@ var deck = bespoke.from('article', {
 
   backgrounds.forEach(deck.parent.appendChild.bind(deck.parent));
 }(deck));
+
+
+(function preloadBackgroundImages() {
+
+  var matches, image,
+    forEach = function(arrayLike, fn) {
+      [].slice.call(arrayLike, 0).forEach(fn);
+    };
+
+  forEach(document.styleSheets, function(sheet) {
+    forEach(sheet.rules, function(rule) {
+      if (rule.style && rule.style.backgroundImage) {
+        matches = rule.style.backgroundImage.match(/url\((.*)\)/);
+        if (matches) {
+          image = new Image();
+          image.src = matches[1];
+        }
+      }
+    });
+  });
+
+}());
